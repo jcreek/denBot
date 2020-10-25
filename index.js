@@ -124,8 +124,8 @@ client.on('message', function (message) {
       message.channel.send(`The queue is already empty...`);
       console.log(`${message.author.username} attmepted to clear the queue but it was already empty.`);
 		}
-		else{
-			rankedList = [];
+		else {
+			playerQueue = [];
 			message.channel.send(`The queue has been cleared!`);
 			console.log(`${message.author.username} cleared the queue.`);
 		}
