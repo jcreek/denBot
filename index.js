@@ -33,7 +33,7 @@ let playerQueue = [];
 
 client.login(config.token);
 client.once('ready', () =>{
-	console.log('denBot logged in successfully!');
+	logger.log('info', 'denBot logged in successfully!');
 })
 
 /*
@@ -55,7 +55,7 @@ function generateRandomCode() {
 function checkQueue(message) {
   if (playerQueue.length === config.maxqueuesize) {
     // Queue is full
-    console.log('Queue is full');
+    logger.log('info', 'Queue is full');
 
     // Post a message to say the queue is complete
     message.channel.send(`The adventure is beginning - players should check their DMs\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
@@ -67,13 +67,13 @@ function checkQueue(message) {
         client.users.cache.get(player.id).send(`Here is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
       });
     } catch (error) {
-      console.log(error);
+      logger.log('error', error);
       message.channel.send(`There was an error, please let an admin know!\n${error}`);
     }
 
     // Clear the queue
     playerQueue = [];
-    console.log('Emptied queue');
+    logger.log('info', 'Emptied queue');
   }
   else if (playerQueue.length === 0) {
     message.channel.send('The queue is empty :(');
@@ -112,7 +112,7 @@ client.on('message', function (message) {
     // Delete the message with the bot command
 		message.delete();
 
-		console.log(`${message.author.username} joined the queue.`);
+		logger.log('info', `${message.author.username} joined the queue.`);
 		message.channel.send(`${message.author.username} joined the queue.`);
 
 		playerQueue.push(message.author);
@@ -130,7 +130,7 @@ client.on('message', function (message) {
 		// Delete the message with the bot command
 		message.delete();
 
-		console.log(`${message.author.username} left the queue.`);
+		logger.log('info', `${message.author.username} left the queue.`);
 		message.channel.send(`${message.author.username} left the queue.`);
 
 		for( var i = 0; i < playerQueue.length; i++){
@@ -162,12 +162,12 @@ client.on('message', function (message) {
 
     if (playerQueue.length === 0) {
       message.channel.send(`The queue is already empty...`);
-      console.log(`${message.author.username} attmepted to clear the queue but it was already empty.`);
+      logger.log('info', `${message.author.username} attempted to clear the queue but it was already empty.`);
 		}
 		else {
 			playerQueue = [];
 			message.channel.send(`The queue has been cleared!`);
-			console.log(`${message.author.username} cleared the queue.`);
+			logger.log('info', `${message.author.username} cleared the queue.`);
 		}
 	}
 
@@ -182,7 +182,6 @@ client.on('message', function (message) {
 
       // Search for the user
       for(var i = 0; i < playerQueue.length; i++){
-        console.log(i + ' ' + playerQueue[i].username);
         if ((playerQueue[i].username === user.username)){
           playerQueue.splice(i, 1);
           i--;
@@ -190,13 +189,13 @@ client.on('message', function (message) {
       }
 
       message.channel.send(`${user.username} removed from queue.`);
-      console.log(`${message.author.username} removed ${user.username} from queue.`);
+      logger.log('info', `${message.author.username} removed ${user.username} from queue.`);
 
       checkQueue(message);
     }
     else if (!(playerQueue.includes(user))) {
       message.channel.send(`${user.username} is not in the queue.`);
-      console.log(`${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
+      logger.log('info', `${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
     }
 	}
 });
