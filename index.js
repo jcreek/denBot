@@ -46,6 +46,7 @@ function checkQueue(message) {
 
     // Clear the queue
     playerQueue = [];
+    console.log('Emptied queue');
   }
   else if (playerQueue.length === 0) {
     message.channel.send('The queue is empty :(');
