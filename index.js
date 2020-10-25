@@ -17,6 +17,7 @@ client.once('ready', () =>{
   * lq  - Leave the queue
   * sq  - Show the queue
   * cq  - Clear the queue
+  * ru  - Remove a user from the queue
 */
 
 function generateRandomCode() {
@@ -56,6 +57,20 @@ function checkQueue(message) {
     // Show queue after adding
     message.channel.send(`${queueTitle}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
   }
+}
+
+function getUserFromMention(mention) {
+	if (!mention) return;
+
+	if (mention.startsWith('<@') && mention.endsWith('>')) {
+		mention = mention.slice(2, -1);
+
+		if (mention.startsWith('!')) {
+			mention = mention.slice(1);
+		}
+
+		return client.users.cache.get(mention);
+	}
 }
 
 client.on('message', function (message) {
@@ -129,5 +144,34 @@ client.on('message', function (message) {
 			message.channel.send(`The queue has been cleared!`);
 			console.log(`${message.author.username} cleared the queue.`);
 		}
+	}
+
+  // Remove someone else from queue
+  if (command === 'ru' && args[0]) {
+    const user = getUserFromMention(args[0]);
+
+    // Delete the message with the bot command
+    message.delete();
+
+    if ((playerQueue.includes(user))) {
+
+      // Search for the user
+      for(var i = 0; i < playerQueue.length; i++){
+        console.log(i + ' ' + playerQueue[i].username);
+        if ((playerQueue[i].username === user.username)){
+          playerQueue.splice(i, 1);
+          i--;
+        }
+      }
+
+      message.channel.send(`${user.username} removed from queue.`);
+      console.log(`${message.author.username} removed ${user.username} from queue.`);
+
+      checkQueue(message);
+    }
+    else if (!(playerQueue.includes(user))) {
+      message.channel.send(`${user.username} is not in the queue.`);
+      console.log(`${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
+    }
 	}
 });
