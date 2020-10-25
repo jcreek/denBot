@@ -15,6 +15,7 @@ client.once('ready', () =>{
   * Commands:
   * q   - Join the queue
   * lq  - Leave the queue
+  * sq  - Show the queue
 */
 
 function generateRandomCode() {
@@ -104,4 +105,11 @@ client.on('message', function (message) {
 		message.delete();
 		message.channel.send(`${message.author.username} you can't leave the queue before you've joined it!`);
   }
+
+  // Show the queue
+	if(command === 'sq') {
+		// Delete the message with the bot command
+		message.delete();
+		checkQueue(message);
+	}
 });
