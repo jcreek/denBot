@@ -1,0 +1,14 @@
+{
+  "name": "denbot",
+  "version": "1.0.0",
+  "description": "A bot to let four adventurers join together via Discord.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jcreek",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.4.1"
+  }
+}
