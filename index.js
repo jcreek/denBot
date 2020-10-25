@@ -16,6 +16,7 @@ client.once('ready', () =>{
   * q   - Join the queue
   * lq  - Leave the queue
   * sq  - Show the queue
+  * cq  - Clear the queue
 */
 
 function generateRandomCode() {
@@ -112,5 +113,21 @@ client.on('message', function (message) {
 		// Delete the message with the bot command
 		message.delete();
 		checkQueue(message);
+	}
+
+  // Clear the queue
+	if(command === 'cq') {
+		// Delete the message with the bot command
+    message.delete();
+
+    if (playerQueue.length === 0) {
+      message.channel.send(`The queue is already empty...`);
+      console.log(`${message.author.username} attmepted to clear the queue but it was already empty.`);
+		}
+		else{
+			rankedList = [];
+			message.channel.send(`The queue has been cleared!`);
+			console.log(`${message.author.username} cleared the queue.`);
+		}
 	}
 });
