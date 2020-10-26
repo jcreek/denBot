@@ -2,7 +2,7 @@
   "channeldeletetimeinminutes": 30,
   "deletecommandstoggle": false,
   "maxqueuesize": 4,
-  "channeldeletetimeinminutes": 20,
+  "channeldeletetimeinminutes": 30,
   "deletecommandstoggle": false,
   "prefix": "!",
 	"token": "YOUR-TOKEN-GOES-HERE"
