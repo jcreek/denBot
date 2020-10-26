@@ -14,6 +14,7 @@ Commands:
 * sq  - Show the queue
 * cq  - Clear the queue (admin-only, not to be shared with normal users)
 * ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
+* dc  - Delete an adventure channel (only the captain can use this)
 
 ## Dockerize the bot
 

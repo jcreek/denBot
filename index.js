@@ -46,6 +46,7 @@ client.once('ready', () =>{
   * sq              - Show the queue
   * cq              - Clear the queue
   * ru              - Remove a tagged user from the queue
+  * dc              - Delete an adventure channel (only the captain can use this)
 */
 
 function generateRandomCode() {
@@ -134,6 +135,11 @@ function makeTempChannel(message) {
 
   // Delete the channel after 20 minutes
   setTimeout(function(){ deleteChannel(createdChannelId); }, 20000);
+}
+
+function deleteChannel(channelId) {
+  const fetchedChannel = message.guild.channels.cache.get(channelId);
+  fetchedChannel.delete();
 }
 
 client.on('message', function (message) {
@@ -241,5 +247,17 @@ client.on('message', function (message) {
       message.channel.send(`${user.username} is not in the queue.`);
       logger.log('info', `${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
     }
-	}
+  }
+
+  if (command === 'dc') {
+    // todo - add logic here to determine if they can delete the channel (i.e. it's their temporary one) - compare the name
+    if (message.channel.name === getChannelName(message.author.username)) {
+      deleteChannel(message.channel.id)
+      logger.log('info', `${message.author.username} deleted their adventure channel.`);
+    }
+    else {
+      message.channel.send(`${message.author.username} is not allowed to delete this channel.`);
+      logger.log('info', `${message.author.username} attempted to delete channel ${message.channel.id} but it's not their adventure channel.`);
+    }
+  }
 });
