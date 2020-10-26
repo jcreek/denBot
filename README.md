@@ -24,9 +24,9 @@ For a sanity check, you can run `docker images` and it should be displayed in th
 
 ## Running the Docker container
 
-Running our bot with -d runs the container in detatched mode (as in it runs in the background). If you want to see what is happening, remove that option.
+Running the bot with -d runs the container in detatched mode (as in it runs in the background). If you want to see what is happening, remove that option.
 
-`docker run -d my-bot`
+`docker run -d denBot`
 
 ### More information
 
