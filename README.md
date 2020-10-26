@@ -29,15 +29,11 @@ Running our bot with -d runs the container in detatched mode (as in it runs in t
 `docker run -d my-bot`
 
 ### More information
+
 If you want more of a sanity check here are some following commands you can run the following commands:
 
-```
-# Get the container!
-docker ps
-
-# Print the logs
-docker logs <our container's ID>
-```
+* To view details of running containers: `docker ps`
+* To view the container's logs (with a number instead of the <> section): `docker logs <our container's ID>`
 
 To access the command line inside the docker container you can run:
 
