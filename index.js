@@ -147,7 +147,7 @@ function makeTempChannel(message) {
     .catch(logger.error);
 
   // Delete the channel after 20 seconds
-  setTimeout(function(){ deleteChannel(message, createdChannelId); }, (config.channeldeletetimeinminutes * 1000) );
+  setTimeout(function(){ deleteChannel(message, createdChannelId); }, (config.channeldeletetimeinminutes * 1000 * 60) );
 }
 
 function deleteChannel(message, channelId) {
