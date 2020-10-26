@@ -69,7 +69,12 @@ function checkQueue(message) {
       // DM users
       const randomCode = generateRandomCode();
       playerQueue.forEach(player => {
-        client.users.cache.get(player.id).send(`${queueTitle}\nPokemon: ${pokemonName}\Captain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
+        if (pokemonName === '' && captainInGameName === '') {
+          client.users.cache.get(player.id).send(`${queueTitle}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
+        }
+        else {
+          client.users.cache.get(player.id).send(`${queueTitle}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
+        }
       });
     } catch (error) {
       logger.log('error', error);
@@ -89,12 +94,11 @@ function checkQueue(message) {
   }
   else {
     // Show queue after adding
-
-    if (pokemonName.length > 0 && captainInGameName.length > 0) {
-      message.channel.send(`${queueTitle}\nPokemon: ${pokemonName}\Captain's IGN: ${captainInGameName}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+    if (pokemonName === '' && captainInGameName === '') {
+      message.channel.send(`${queueTitle}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
     }
     else {
-      message.channel.send(`${queueTitle}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+      message.channel.send(`${queueTitle}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
     }
   }
 }
