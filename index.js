@@ -66,23 +66,22 @@ function checkQueue(message) {
     // Post a message to say the queue is complete
     message.channel.send(`The adventure is beginning - players should check their DMs\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
 
+    const randomCode = generateRandomCode();
+    const adventureMessage = (pokemonName === '' && captainInGameName === '')
+      ? `${generateQueueTitle()}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`
+      : `${generateQueueTitle()}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`;
+
     try {
       // DM users
-      const randomCode = generateRandomCode();
       playerQueue.forEach(player => {
-        if (pokemonName === '' && captainInGameName === '') {
-          client.users.cache.get(player.id).send(`${generateQueueTitle()}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
-        }
-        else {
-          client.users.cache.get(player.id).send(`${generateQueueTitle()}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
-        }
+        client.users.cache.get(player.id).send(adventureMessage);
       });
     } catch (error) {
       logger.log('error', error);
       message.channel.send(`There was an error, please let an admin know!\n${error}`);
     }
 
-    makeTempChannel(message);
+    makeTempChannel(message, adventureMessage);
 
     // Clear the queue
     playerQueue = [];
@@ -122,7 +121,7 @@ function getChannelName(username) {
   return `${username}s-adventurers`;
 }
 
-function makeTempChannel(message) {
+function makeTempChannel(message, adventureMessage) {
   const channelName = getChannelName(playerQueue[0].username);
   let createdChannelId = '';
   let everyoneRole = message.guild.roles.cache.find(r => r.name === '@everyone');
@@ -143,7 +142,12 @@ function makeTempChannel(message) {
   message.guild.channels.create(channelName, {
     type: 'text',
     permissionOverwrites: permissionOverwrites,
-  }).then(createdChannel => { createdChannelId = createdChannel.id; })
+  }).then(createdChannel => {
+    createdChannelId = createdChannel.id;
+
+    // Post in the channel
+    createdChannel.send(adventureMessage);
+  })
     .catch(logger.error);
 
   // Delete the channel after 20 seconds
