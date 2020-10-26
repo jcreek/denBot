@@ -150,7 +150,7 @@ function makeTempChannel(message, adventureMessage) {
   })
     .catch(logger.error);
 
-  // Delete the channel after 20 seconds
+  // Delete the channel after the configured amount of minutes
   setTimeout(function(){ deleteChannel(message, createdChannelId); }, (config.channeldeletetimeinminutes * 1000 * 60) );
 }
 
