@@ -27,9 +27,11 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-const queueTitle = '===== QUEUE =====';
+const queueTitle = '===== ADVENTURE QUEUE =====';
 
 let playerQueue = [];
+let pokemonName = '';
+let captainInGameName = '';
 
 client.login(config.token);
 client.once('ready', () =>{
@@ -64,7 +66,7 @@ function checkQueue(message) {
       // DM users
       const randomCode = generateRandomCode();
       playerQueue.forEach(player => {
-        client.users.cache.get(player.id).send(`Here is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
+        client.users.cache.get(player.id).send(`${queueTitle}\nPokemon: ${pokemonName}\Captain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
       });
     } catch (error) {
       logger.log('error', error);
@@ -77,10 +79,18 @@ function checkQueue(message) {
   }
   else if (playerQueue.length === 0) {
     message.channel.send('The queue is empty :(');
+    pokemonName = '';
+    captainInGameName = '';
   }
   else {
     // Show queue after adding
-    message.channel.send(`${queueTitle}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+
+    if (pokemonName.length > 0 && captainInGameName.length > 0) {
+      message.channel.send(`${queueTitle}\nPokemon: ${pokemonName}\Captain's IGN: ${captainInGameName}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+    }
+    else {
+      message.channel.send(`${queueTitle}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+    }
   }
 }
 
@@ -115,7 +125,13 @@ client.on('message', function (message) {
 		logger.log('info', `${message.author.username} joined the queue.`);
 		message.channel.send(`${message.author.username} joined the queue.`);
 
-		playerQueue.push(message.author);
+    playerQueue.push(message.author);
+
+    if (playerQueue.length === 1 && args[0] && args[1]) {
+      // First player can submit pokemon and in-game name
+      pokemonName = args[0];
+      captainInGameName = args[1];
+    }
 
     checkQueue(message);
 	}
