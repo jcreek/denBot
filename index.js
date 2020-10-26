@@ -155,6 +155,8 @@ function makeTempChannel(message, adventureMessage) {
 }
 
 function deleteChannel(message, channelId) {
+  // For some reason this errors without the console.log loading the cache first - not sure why
+  console.log(message.guild.channels.cache);
   const fetchedChannel = message.guild.channels.cache.get(channelId);
   fetchedChannel.delete();
 }
@@ -284,7 +286,7 @@ client.on('message', function (message) {
   if (command === 'dc') {
     // todo - add logic here to determine if they can delete the channel (i.e. it's their temporary one) - compare the name
     if (message.channel.name === getChannelName(message.author.username)) {
-      deleteChannel(message.channel.id)
+      deleteChannel(message, message.channel.id)
       logger.log('info', `${message.author.username} deleted their adventure channel.`);
     }
     else {
