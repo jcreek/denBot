@@ -1,4 +1,5 @@
 FROM node:14-alpine
+ENV NODE_ENV=production
 
 # Create the directory
 RUN mkdir -p /usr/src/bot
