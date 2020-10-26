@@ -156,9 +156,10 @@ function deleteChannel(message, channelId) {
 }
 
 client.on('message', function (message) {
-  // Ignore messages from the bot and that don't begin with the prefix
+  // Ignore messages from the bot and that don't begin with the prefix, and do not run in DMs to bot
   if (message.author.bot) return;
   if (!message.content.startsWith(config.prefix)) return;
+  if (message.channel instanceof Discord.DMChannel) return;
 
   const commandBody = message.content.slice(config.prefix.length);
   const args = commandBody.split(' ');
