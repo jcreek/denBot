@@ -26,9 +26,6 @@ if (process.env.NODE_ENV !== 'production') {
     format: winston.format.simple(),
   }));
 }
-
-const queueTitle = '\n===== ADVENTURE QUEUE =====';
-
 let playerQueue = [];
 let pokemonName = '';
 let captainInGameName = '';
@@ -48,6 +45,10 @@ client.once('ready', () =>{
   * ru              - Remove a tagged user from the queue
   * dc              - Delete an adventure channel (only the captain can use this)
 */
+
+function generateQueueTitle() {
+  return `\n===== ADVENTURE QUEUE (${playerQueue.length}/${config.maxqueuesize}) =====`;
+}
 
 function generateRandomCode() {
   const num1 = Math.floor((Math.random() * 9999) + 1);
@@ -70,10 +71,10 @@ function checkQueue(message) {
       const randomCode = generateRandomCode();
       playerQueue.forEach(player => {
         if (pokemonName === '' && captainInGameName === '') {
-          client.users.cache.get(player.id).send(`${queueTitle}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
+          client.users.cache.get(player.id).send(`${generateQueueTitle()}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
         }
         else {
-          client.users.cache.get(player.id).send(`${queueTitle}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
+          client.users.cache.get(player.id).send(`${generateQueueTitle()}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`);
         }
       });
     } catch (error) {
@@ -95,10 +96,10 @@ function checkQueue(message) {
   else {
     // Show queue after adding
     if (pokemonName === '' && captainInGameName === '') {
-      message.channel.send(`${queueTitle}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+      message.channel.send(`${generateQueueTitle()}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
     }
     else {
-      message.channel.send(`${queueTitle}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+      message.channel.send(`${generateQueueTitle()}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
     }
   }
 }
