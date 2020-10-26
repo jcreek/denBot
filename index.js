@@ -288,4 +288,32 @@ client.on('message', function (message) {
       logger.log('info', `${message.author.username} attempted to delete channel ${message.channel.id} but it's not their adventure channel.`);
     }
   }
+
+  if (command === 'help') {
+    let msg = `
+The commands available to you are:
+- !q   - Join the queue
+- !q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
+- !lq  - Leave the queue
+- !sq  - Show the queue
+- !dc  - Delete an adventure channel (only the captain can use this)
+    `;
+
+    message.channel.send(msg);
+  }
+
+  if (command === 'adminhelp') {
+    let msg = `
+The commands available to you are:
+- !q   - Join the queue
+- !q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
+- !lq  - Leave the queue
+- !sq  - Show the queue
+- !cq  - Clear the queue (admin-only, not to be shared with normal users)
+- !ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
+- !dc  - Delete an adventure channel (only the captain can use this)
+    `;
+
+    message.channel.send(msg);
+  }
 });
