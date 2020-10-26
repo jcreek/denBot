@@ -53,7 +53,8 @@ function generateRandomCode() {
   const num1 = Math.floor((Math.random() * 9999) + 1);
   const num2 = Math.floor((Math.random() * 9999) + 1);
 
-  return `${num1}-${num2}`;
+  // Pad the start of the numbers so there's always four digits, including leading zeros
+  return `${num1.toString().padStart(4, '0')}-${num2.toString().padStart(4, '0')}`;
 }
 
 function checkQueue(message) {
