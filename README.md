@@ -4,7 +4,7 @@ A queue bot to enable multiple (default 4) Pokémon players to go on an adventur
 
 ## Features
 
-Users can join and leave a queue. When the queue is full users are DMed a code to join the in-game lobby.
+Users can join and leave a queue. When the queue is full users are DMed a code to join the in-game lobby. They have access to a private text channel in the discord server that the captain can manually delete when ready, or that will be automatically removed after a period of time.
 
 Commands:
 
@@ -41,8 +41,4 @@ To access the command line inside the docker container you can run:
 
 `docker exec -it <container id> /bin/bash`
 
-## Version 2 features list
 
-* Add all queued users to a private temporary text channel in the Discord server. This will probably require:
-  * Make a role, give it to all of the users, create a text channel with only that role able to see and join it
-  * Then handle deleting that channel and role at the appropriate time, either through a timeout or a command
