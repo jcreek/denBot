@@ -123,7 +123,7 @@ function getChannelName(username) {
 }
 
 function makeTempChannel(message) {
-  const channelName = getChannelName(message.author.username);
+  const channelName = getChannelName(playerQueue[0].username);
   let createdChannelId = '';
   let everyoneRole = message.guild.roles.cache.find(r => r.name === '@everyone');
 
