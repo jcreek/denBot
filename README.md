@@ -13,3 +13,32 @@ Commands:
 * sq  - Show the queue
 * cq  - Clear the queue (admin-only, not to be shared with normal users)
 * ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
+
+## Dockerize the bot
+
+To build a docker image, open a command window in the project directory and run:
+
+`docker build -t denBot .`
+
+For a sanity check, you can run `docker images` and it should be displayed in that list.
+
+## Running the Docker container
+
+Running our bot with -d runs the container in detatched mode (as in it runs in the background). If you want to see what is happening, remove that option.
+
+`docker run -d my-bot`
+
+### More information
+If you want more of a sanity check here are some following commands you can run the following commands:
+
+```
+# Get the container!
+docker ps
+
+# Print the logs
+docker logs <our container's ID>
+```
+
+To access the command line inside the docker container you can run:
+
+`docker exec -it <container id> /bin/bash`
