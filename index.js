@@ -140,7 +140,6 @@ function makeTempChannel(message) {
     });
   });
 
-  console.log(permissionOverwrites);
   message.guild.channels.create(channelName, {
     type: 'text',
     permissionOverwrites: permissionOverwrites,
