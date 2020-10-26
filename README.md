@@ -16,11 +16,17 @@ Commands:
 * ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
 * dc  - Delete an adventure channel (only the captain can use this)
 
+## Installing Docker
+
+If you're on Windows, visit [this website](https://docs.docker.com/docker-for-windows/install/) and download and install Docker Desktop. You'll probably need to install WSL and do some Windows updates. Once it's all installed you'll get a lovely GUI that you can use if you want to.
+
+For Mac and Linux users, Google is your friend here.
+
 ## Dockerize the bot
 
 To build a docker image, open a command window in the project directory and run:
 
-`docker build -t denBot .`
+`docker build -t denbot .`
 
 For a sanity check, you can run `docker images` and it should be displayed in that list.
 
@@ -28,7 +34,9 @@ For a sanity check, you can run `docker images` and it should be displayed in th
 
 Running the bot with -d runs the container in detatched mode (as in it runs in the background). If you want to see what is happening, remove that option.
 
-`docker run -d denBot`
+`docker run -d denbot`
+
+You can use CTRL+C to exit out of this command window. If you're using Windows, Docker Desktop will now show your bot under 'Containers/Apps', from where you can easily stop and start it using the GUI.
 
 ### More information
 
