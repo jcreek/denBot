@@ -9,7 +9,7 @@
   "author": "jcreek",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.4.1",
-    "winston": "^3.3.3"
+    "discord.js": "12.4.1",
+    "winston": "3.3.3"
   }
 }
