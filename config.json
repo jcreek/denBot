@@ -1,5 +1,6 @@
 {
   "maxqueuesize": 4,
+  "channeldeletetimeinminutes": 20,
   "prefix": "!",
 	"token": "NzcwMDQyMDEzMjY5NDkxNzUy.X5Xzgg.kcr_51g95iUvEcYCfbQvG1Sx8ao"
 }
