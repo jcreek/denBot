@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-const queueTitle = '===== ADVENTURE QUEUE =====';
+const queueTitle = '\n===== ADVENTURE QUEUE =====';
 
 let playerQueue = [];
 let pokemonName = '';
@@ -170,7 +170,7 @@ client.on('message', function (message) {
 		message.delete();
 
 		logger.log('info', `${message.author.username} joined the queue.`);
-		message.channel.send(`${message.author.username} joined the queue.`);
+		message.channel.send(`=====\n${message.author.username} joined the queue.`);
 
     playerQueue.push(message.author);
 
