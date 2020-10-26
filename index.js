@@ -118,27 +118,35 @@ function getChannelName(username) {
 }
 
 function makeTempChannel(message) {
-  const everyoneRole = message.guild.defaultRole;
-  let createdChannelId = '';
-
   const channelName = getChannelName(message.author.username);
-  message.guild.createChannel(channelName, 'text')
-      .then(createdChannel => {
-        playerQueue.forEach(player => {
-          createdChannel.overwritePermissions(player.id, { VIEW_CHANNEL: true });
-        });
-        createdChannel.overwritePermissions(client.id, { VIEW_CHANNEL: true });
-        createdChannel.overwritePermissions(everyoneRole, { VIEW_CHANNEL: false });
+  let createdChannelId = '';
+  let everyoneRole = message.guild.roles.cache.find(r => r.name === '@everyone');
 
-        createdChannelId = createdChannel.id;
-      })
-      .catch(logger.error);
+  let permissionOverwrites = [{
+    id: everyoneRole.id,
+    deny: ['VIEW_CHANNEL'],
+    },
+  ];
 
-  // Delete the channel after 20 minutes
-  setTimeout(function(){ deleteChannel(createdChannelId); }, 20000);
+  playerQueue.forEach(player => {
+    permissionOverwrites.push({
+      id: player.id,
+      allow: ['VIEW_CHANNEL'],
+    });
+  });
+
+  console.log(permissionOverwrites);
+  message.guild.channels.create(channelName, {
+    type: 'text',
+    permissionOverwrites: permissionOverwrites,
+  }).then(createdChannel => { createdChannelId = createdChannel.id; })
+    .catch(logger.error);
+
+  // Delete the channel after 20 seconds
+  setTimeout(function(){ deleteChannel(message, createdChannelId); }, (config.channeldeletetimeinminutes * 1000) );
 }
 
-function deleteChannel(channelId) {
+function deleteChannel(message, channelId) {
   const fetchedChannel = message.guild.channels.cache.get(channelId);
   fetchedChannel.delete();
 }
