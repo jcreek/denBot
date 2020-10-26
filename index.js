@@ -167,7 +167,9 @@ client.on('message', function (message) {
   // Join the queue
   if (command === 'q' && !(playerQueue.includes(message.author))) {
     // Delete the message with the bot command
-		message.delete();
+    if (config.deletecommandstoggle) {
+      message.delete();
+    }
 
 		logger.log('info', `${message.author.username} joined the queue.`);
 		message.channel.send(`=====\n${message.author.username} joined the queue.`);
@@ -184,14 +186,18 @@ client.on('message', function (message) {
 	}
 	else if (command === 'q' && (playerQueue.includes(message.author))) {
 		// Delete the message with the bot command
-		message.delete();
+		if (config.deletecommandstoggle) {
+      message.delete();
+    }
 		message.channel.send(`${message.author.username} is too keen, you're already in the queue mate!`);
   }
 
   // Leave the queue
 	if(command === 'lq' && (playerQueue.includes(message.author))){
 		// Delete the message with the bot command
-		message.delete();
+		if (config.deletecommandstoggle) {
+      message.delete();
+    }
 
 		logger.log('info', `${message.author.username} left the queue.`);
 		message.channel.send(`${message.author.username} left the queue.`);
@@ -207,21 +213,27 @@ client.on('message', function (message) {
 	}
 	else if (command === 'lq' && !(playerQueue.includes(message.author))) {
 		// Delete the message with the bot command
-		message.delete();
+		if (config.deletecommandstoggle) {
+      message.delete();
+    }
 		message.channel.send(`${message.author.username} you can't leave the queue before you've joined it!`);
   }
 
   // Show the queue
 	if(command === 'sq') {
 		// Delete the message with the bot command
-		message.delete();
+		if (config.deletecommandstoggle) {
+      message.delete();
+    }
 		checkQueue(message);
 	}
 
   // Clear the queue
 	if(command === 'cq') {
 		// Delete the message with the bot command
-    message.delete();
+    if (config.deletecommandstoggle) {
+      message.delete();
+    }
 
     if (playerQueue.length === 0) {
       message.channel.send(`The queue is already empty...`);
@@ -239,7 +251,9 @@ client.on('message', function (message) {
     const user = getUserFromMention(args[0]);
 
     // Delete the message with the bot command
-    message.delete();
+    if (config.deletecommandstoggle) {
+      message.delete();
+    }
 
     if ((playerQueue.includes(user))) {
 
