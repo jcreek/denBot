@@ -42,7 +42,7 @@ client.once('ready', () =>{
   * lq  - Leave the queue
   * sq  - Show the queue
   * cq  - Clear the queue
-  * ru  - Remove a user from the queue
+  * ru  - Remove a tagged user from the queue
 */
 
 function generateRandomCode() {
@@ -171,7 +171,7 @@ client.on('message', function (message) {
 		}
 	}
 
-  // Remove someone else from queue
+  // Remove a tagged user from queue
   if (command === 'ru' && args[0]) {
     const user = getUserFromMention(args[0]);
 
