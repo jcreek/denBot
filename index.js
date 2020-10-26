@@ -114,7 +114,7 @@ function getUserFromMention(mention) {
 }
 
 function getChannelName(username) {
-  return `${username}'s adventurers`;
+  return `${username}s-adventurers`;
 }
 
 function makeTempChannel(message) {
