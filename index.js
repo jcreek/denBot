@@ -74,6 +74,8 @@ function checkQueue(message) {
       message.channel.send(`There was an error, please let an admin know!\n${error}`);
     }
 
+    makeTempChannel(message);
+
     // Clear the queue
     playerQueue = [];
     logger.log('info', 'Emptied queue');
@@ -107,6 +109,31 @@ function getUserFromMention(mention) {
 
 		return client.users.cache.get(mention);
 	}
+}
+
+function getChannelName(username) {
+  return `${username}'s adventurers`;
+}
+
+function makeTempChannel(message) {
+  const everyoneRole = message.guild.defaultRole;
+  let createdChannelId = '';
+
+  const channelName = getChannelName(message.author.username);
+  message.guild.createChannel(channelName, 'text')
+      .then(createdChannel => {
+        playerQueue.forEach(player => {
+          createdChannel.overwritePermissions(player.id, { VIEW_CHANNEL: true });
+        });
+        createdChannel.overwritePermissions(client.id, { VIEW_CHANNEL: true });
+        createdChannel.overwritePermissions(everyoneRole, { VIEW_CHANNEL: false });
+
+        createdChannelId = createdChannel.id;
+      })
+      .catch(logger.error);
+
+  // Delete the channel after 20 minutes
+  setTimeout(function(){ deleteChannel(createdChannelId); }, 20000);
 }
 
 client.on('message', function (message) {
