@@ -9,6 +9,7 @@ Users can join and leave a queue. When the queue is full users are DMed a code t
 Commands:
 
 * q   - Join the queue
+* q pokemon ign   - Join the queue (first player can set the pokemon and their in-game name)
 * lq  - Leave the queue
 * sq  - Show the queue
 * cq  - Clear the queue (admin-only, not to be shared with normal users)

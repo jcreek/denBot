@@ -40,11 +40,12 @@ client.once('ready', () =>{
 
 /*
   * Commands:
-  * q   - Join the queue
-  * lq  - Leave the queue
-  * sq  - Show the queue
-  * cq  - Clear the queue
-  * ru  - Remove a tagged user from the queue
+  * q               - Join the queue
+  * q pokemon ign   - Join the queue (first player can set the pokemon and their in-game name)
+  * lq              - Leave the queue
+  * sq              - Show the queue
+  * cq              - Clear the queue
+  * ru              - Remove a tagged user from the queue
 */
 
 function generateRandomCode() {
