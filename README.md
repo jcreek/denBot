@@ -38,3 +38,9 @@ If you want more of a sanity check here are some following commands you can run 
 To access the command line inside the docker container you can run:
 
 `docker exec -it <container id> /bin/bash`
+
+## Version 2 features list
+
+* Add all queued users to a private temporary text channel in the Discord server. This will probably require:
+  * Make a role, give it to all of the users, create a text channel with only that role able to see and join it
+  * Then handle deleting that channel and role at the appropriate time, either through a timeout or a command
