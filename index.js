@@ -107,7 +107,7 @@ client.on('message', function (message) {
   const args = commandBody.split(' ');
   const command = args.shift().toLowerCase();
 
-  // Add to queue
+  // Join the queue
   if (command === 'q' && !(playerQueue.includes(message.author))) {
     // Delete the message with the bot command
 		message.delete();
@@ -125,7 +125,7 @@ client.on('message', function (message) {
 		message.channel.send(`${message.author.username} is too keen, you're already in the queue mate!`);
   }
 
-  // Remove from queue
+  // Leave the queue
 	if(command === 'lq' && (playerQueue.includes(message.author))){
 		// Delete the message with the bot command
 		message.delete();
@@ -171,7 +171,7 @@ client.on('message', function (message) {
 		}
 	}
 
-  // Remove a tagged user from queue
+  // Remove a tagged user from the queue
   if (command === 'ru' && args[0]) {
     const user = getUserFromMention(args[0]);
 
