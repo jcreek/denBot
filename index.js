@@ -67,9 +67,10 @@ function checkQueue(message) {
     message.channel.send(`The adventure is beginning - players should check their DMs\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
 
     const randomCode = generateRandomCode();
+    const baseMessage = `@${playerQueue[0].username} is making the lobby. Here is your link code ${randomCode}`;
     const adventureMessage = (pokemonName === '' && captainInGameName === '')
-      ? `${generateQueueTitle()}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`
-      : `${generateQueueTitle()}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\nHere is your link code ${randomCode} - @${playerQueue[0].username} is making the lobby, have fun!`;
+      ? `${generateQueueTitle()}\n${baseMessage}`
+      : `${generateQueueTitle()}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\n${baseMessage}`;
 
     try {
       // DM users
