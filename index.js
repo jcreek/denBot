@@ -140,6 +140,7 @@ function makeTempChannel(message, adventureMessage) {
     });
   });
 
+  logger.info(`Making temp channel ${channelName}`)
   message.guild.channels.create(channelName, {
     type: 'text',
     permissionOverwrites: permissionOverwrites,
@@ -160,6 +161,7 @@ function deleteChannel(message, channelName) {
     // Get a Channel by Name
     const fetchedChannel = message.guild.channels.cache.find(channel => channel.name === channelName);
 
+    logger.info(`Deleting temp channel ${channelName}`)
     fetchedChannel.delete();
   } catch (error) {
     logger.error(error);
