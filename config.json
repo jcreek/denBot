@@ -2,6 +2,7 @@
   "channeldeletetimeinminutes": 30,
   "deletecommandstoggle": false,
   "maxqueuesize": 4,
+  "elasticsearchhost": "http://jcreek.ddns.net:9200",
   "prefix": "!",
 	"token": "NzcwMDQyMDEzMjY5NDkxNzUy.X5Xzgg.kcr_51g95iUvEcYCfbQvG1Sx8ao"
 }
