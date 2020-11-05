@@ -30,11 +30,11 @@ const myFormat = format.printf((info) => {
 });
 
 const esTransportOpts = {
-  level: 'error',
+  level: 'info',
   indexPrefix: 'logs_denbot',
   clientOpts: {
       host: config.elasticsearch.elasticsearch_address,
-      log: 'error'
+      log: 'info'
   },
   transformer: logData => {
       return {
@@ -76,13 +76,14 @@ if (process.env.NODE_ENV !== 'production') {
     format: winston.format.simple(),
   }));
 }
+
 let playerQueue = [];
 let pokemonName = '';
 let captainInGameName = '';
 
 client.login(config.token);
 client.once('ready', () =>{
-  logger.log('info', 'denBot logged in successfully!');
+  logger.info('denBot logged in successfully!');
 })
 
 /*
@@ -128,7 +129,7 @@ function checkQueue(message) {
         client.users.cache.get(player.id).send(adventureMessage);
       });
     } catch (error) {
-      logger.log('error', error);
+      logger.error('Tried to DM users: ', error);
       message.channel.send(`There was an error, please let an admin know!\n${error}`);
     }
 
@@ -155,17 +156,21 @@ function checkQueue(message) {
 }
 
 function getUserFromMention(mention) {
-	if (!mention) return;
+	try {
+    if (!mention) return;
 
-	if (mention.startsWith('<@') && mention.endsWith('>')) {
-		mention = mention.slice(2, -1);
+    if (mention.startsWith('<@') && mention.endsWith('>')) {
+      mention = mention.slice(2, -1);
 
-		if (mention.startsWith('!')) {
-			mention = mention.slice(1);
-		}
+      if (mention.startsWith('!')) {
+        mention = mention.slice(1);
+      }
 
-		return client.users.cache.get(mention);
-	}
+      return client.users.cache.get(mention);
+    }
+  } catch (error) {
+    logger.error('Tried to get users from mention: ', error);
+  }
 }
 
 function getChannelName(username) {
@@ -202,19 +207,27 @@ function makeTempChannel(message, adventureMessage) {
   })
     .catch(logger.error);
 
-  // Delete the channel after the configured amount of minutes
-  setTimeout(function(){ deleteChannel(message, channelName); }, (config.channeldeletetimeinminutes * 1000 * 60) );
+  try {
+    // Delete the channel after the configured amount of minutes
+    setTimeout(function(){ deleteChannel(message, channelName); }, (config.channeldeletetimeinminutes * 1000 * 60) );
+  } catch (error) {
+    logger.error(`Tried to delete channel ${channelName} after timeout: `, error);
+  }
 }
 
 function deleteChannel(message, channelName) {
   try {
     // Get a Channel by Name
     const fetchedChannel = message.guild.channels.cache.find(channel => channel.name === channelName);
+  } catch (error) {
+    logger.error(`Tried to find a channel called ${channelName} ready for deleting: `, error);
+  }
 
+  try {
     logger.info(`Deleting temp channel ${channelName}`)
     fetchedChannel.delete();
   } catch (error) {
-    logger.error(error);
+    logger.error(`Tried to delete channel ${channelName}: `, error);
   }
 }
 
@@ -235,6 +248,8 @@ client.on('message', function (message) {
       message.delete();
     }
 
+    logger.info(`${message.author.username} used command q in ${message.channel.name}`);
+
 		logger.log('info', `${message.author.username} joined the queue.`);
 		message.channel.send(`=====\n${message.author.username} joined the queue.`);
 
@@ -253,6 +268,9 @@ client.on('message', function (message) {
 		if (config.deletecommandstoggle) {
       message.delete();
     }
+
+    logger.info(`${message.author.username} used command q in ${message.channel.name}`);
+
 		message.channel.send(`${message.author.username} is too keen, you're already in the queue mate!`);
   }
 
@@ -262,6 +280,8 @@ client.on('message', function (message) {
 		if (config.deletecommandstoggle) {
       message.delete();
     }
+
+    logger.info(`${message.author.username} used command lq in ${message.channel.name}`);
 
 		logger.log('info', `${message.author.username} left the queue.`);
 		message.channel.send(`${message.author.username} left the queue.`);
@@ -280,6 +300,9 @@ client.on('message', function (message) {
 		if (config.deletecommandstoggle) {
       message.delete();
     }
+
+    logger.info(`${message.author.username} used command lq in ${message.channel.name}`);
+
 		message.channel.send(`${message.author.username} you can't leave the queue before you've joined it!`);
   }
 
@@ -289,6 +312,9 @@ client.on('message', function (message) {
 		if (config.deletecommandstoggle) {
       message.delete();
     }
+
+    logger.info(`${message.author.username} used command sq in ${message.channel.name}`);
+
 		checkQueue(message);
 	}
 
@@ -298,6 +324,8 @@ client.on('message', function (message) {
     if (config.deletecommandstoggle) {
       message.delete();
     }
+
+    logger.info(`${message.author.username} used command cq in ${message.channel.name}`);
 
     if (playerQueue.length === 0) {
       message.channel.send(`The queue is already empty...`);
@@ -318,6 +346,8 @@ client.on('message', function (message) {
     if (config.deletecommandstoggle) {
       message.delete();
     }
+
+    logger.info(`${message.author.username} used command ru in ${message.channel.name}`);
 
     if ((playerQueue.includes(user))) {
 
@@ -341,7 +371,9 @@ client.on('message', function (message) {
   }
 
   if (command === 'dc') {
-    // todo - add logic here to determine if they can delete the channel (i.e. it's their temporary one) - compare the name
+    logger.info(`${message.author.username} used command dc in ${message.channel.name}`);
+
+    // Determine if they can delete the channel (i.e. it's their temporary one) - compare the name
     if (message.channel.name === getChannelName(message.author.username)) {
       deleteChannel(message, message.channel.name)
       logger.log('info', `${message.author.username} deleted their adventure channel.`);
