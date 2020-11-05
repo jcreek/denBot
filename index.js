@@ -4,10 +4,30 @@ const Elasticsearch = require('winston-elasticsearch');
 const config = require('./config.json');
 const client = new Discord.Client();
 
+const { format } = winston;
+const { combine, timestamp } = format;
+
 let env = 'dev';
 if (process.env.NODE_ENV === 'production') {
   env = 'prod';
 }
+
+// Custom format function that will look for an error object and log out the stack and if
+// its not production, the error itself
+const myFormat = format.printf((info) => {
+  const { timestamp: tmsmp, level, message, error, ...rest } = info;
+  let log = `${tmsmp} - ${level}:\t${message}`;
+  // Only if there is an error
+  if ( error ) {
+    if ( error.stack) log = `${log}\n${error.stack}`;
+    if (process.env.NODE_ENV !== 'production') log = `${log}\n${JSON.stringify(error, null, 2)}`;
+  }
+  // Check if rest is object
+  if ( !( Object.keys(rest).length === 0 && rest.constructor === Object ) ) {
+    log = `${log}\n${JSON.stringify(rest, null, 2)}`;
+  }
+  return log;
+});
 
 const esTransportOpts = {
   level: 'error',
@@ -23,7 +43,8 @@ const esTransportOpts = {
         message: logData.message,
         meta: {
           app: 'denBot',
-          env: env
+          env: env,
+          stack: logData.meta.stack
         }
       }
   }
@@ -31,9 +52,12 @@ const esTransportOpts = {
 
 const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.json()
+  format: combine(
+    winston.format.errors({ stack: true }), // <-- use errors format
+    winston.format.timestamp(),
+    winston.format.prettyPrint(),
+    myFormat,
+    winston.format.json()
   ),
   defaultMeta: { service: 'user-service' },
   transports: [
