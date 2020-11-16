@@ -218,16 +218,18 @@ function makeTempChannel(message, adventureMessage) {
 function deleteChannel(message, channelName) {
   try {
     // Get a Channel by Name
-    const fetchedChannel = message.guild.channels.cache.find(channel => channel.name === channelName);
-  } catch (error) {
-    logger.error(`Tried to find a channel called ${channelName} ready for deleting: `, error);
-  }
+    const fetchedChannel = message.guild.channels.cache.find(channel => channel.name == channelName);
 
-  try {
     logger.info(`Deleting temp channel ${channelName}`)
     fetchedChannel.delete();
   } catch (error) {
     logger.error(`Tried to delete channel ${channelName}: `, error);
+
+    let names = [];
+    message.guild.channels.cache.forEach(channel => {
+      names.push(channel.name);
+    });
+    logger.info(`Channel names in cache: ${names}`);
   }
 }
 
@@ -380,7 +382,7 @@ client.on('message', function (message) {
     }
     else {
       message.channel.send(`${message.author.username} is not allowed to delete this channel.`);
-      logger.log('info', `${message.author.username} attempted to delete channel ${message.channel.id} but it's not their adventure channel.`);
+      logger.log('info', `${message.author.username} attempted to delete channel ${message.channel.name} but it's not their adventure channel.`);
     }
   }
 
