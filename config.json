@@ -7,5 +7,6 @@
     "elasticsearch_index_pattern" : "[logs-denbot-]YYYY.MM.DD"
   },
   "prefix": "!",
+  "token-dev": "Nzc4MDI2MTE1NDkwOTA2MTYz.X7L_SA.bNzC1kQUpBSwEsjp_cDGwR62Soo",
 	"token": "NzcwMDQyMDEzMjY5NDkxNzUy.X5Xzgg.kcr_51g95iUvEcYCfbQvG1Sx8ao"
 }
