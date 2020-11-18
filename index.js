@@ -218,7 +218,7 @@ function makeTempChannel(message, adventureMessage) {
 function deleteChannel(message, channelName) {
   try {
     // Get a Channel by Name
-    const fetchedChannel = message.guild.channels.cache.find(channel => channel.name == channelName);
+    const fetchedChannel = message.guild.channels.cache.find(channel => channel.name.toLowerCase() == channelName.toLowerCase());
 
     logger.info(`Deleting temp channel ${channelName}`)
     fetchedChannel.delete();
