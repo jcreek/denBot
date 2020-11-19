@@ -286,15 +286,22 @@ client.on('message', function (message) {
 
     logger.info(`${message.author.username} used command lq in ${message.channel.name}`);
 
-		logger.log('info', `${message.author.username} left the queue.`);
-		message.channel.send(`${message.author.username} left the queue.`);
-
 		for( var i = 0; i < playerQueue.length; i++){
 			if ( playerQueue[i] === message.author) {
 				playerQueue.splice(i, 1);
 				i--;
 			}
-		}
+    }
+
+    for( var i = 0; i < playerVotes.length; i++){
+			if ( playerVotes[i] === message.author) {
+				playerVotes.splice(i, 1);
+				i--;
+			}
+    }
+
+    logger.log('info', `${message.author.username} left the queue.`);
+		message.channel.send(`${message.author.username} left the queue.`);
 
 		checkQueue(message);
 	}
@@ -325,18 +332,18 @@ client.on('message', function (message) {
       // First player to vote
       playerVotes.push(message.author);
 
-      message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${maxqueuesize} players.`);
+      message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
     }
     else if (playerVotes.includes(message.author.username)) {
-      message.channel.send(`=====\n${message.author.username} has already voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${maxqueuesize} players.`);
+      message.channel.send(`=====\n${message.author.username} has already voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
     }
-    else if (playerVotes.length < maxqueuesize) {
+    else if (playerVotes.length < config.maxqueuesize) {
       // Not the first player to vote
       playerVotes.push(message.author);
 
-      if (playerVotes.length < maxqueuesize) {
-        // Still not all players voted 
-        message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${maxqueuesize} players.`);
+      if (playerVotes.length < playerQueue.length) {
+        // Still not all players voted
+        message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
       }
       else {
         // All players have voted, we can start the adventure early
@@ -397,6 +404,13 @@ client.on('message', function (message) {
           i--;
         }
       }
+
+      for( var i = 0; i < playerVotes.length; i++){
+			if ( playerVotes[i].username === user.username) {
+				playerVotes.splice(i, 1);
+				i--;
+			}
+    }
 
       message.channel.send(`${user.username} removed from queue.`);
       logger.log('info', `${message.author.username} removed ${user.username} from queue.`);
