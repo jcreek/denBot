@@ -78,6 +78,7 @@ const logger = winston.createLogger({
 //}
 
 let playerQueue = [];
+let playerVotes = [];
 let pokemonName = '';
 let captainInGameName = '';
 
@@ -110,7 +111,7 @@ function generateRandomCode() {
 }
 
 function checkQueue(message) {
-  if (playerQueue.length === config.maxqueuesize) {
+  if (playerQueue.length === config.maxqueuesize || playerQueue.length == playerVotes.length) {
     // Queue is full
     logger.log('info', 'Queue is full');
 
@@ -308,6 +309,42 @@ client.on('message', function (message) {
 		message.channel.send(`${message.author.username} you can't leave the queue before you've joined it!`);
   }
 
+  // Vote to start early with only the users currently in the queue
+  if(command === 'start') {
+    // Delete the message with the bot command
+    if (config.deletecommandstoggle) {
+      message.delete();
+    }
+
+    logger.info(`${message.author.username} used command ${command} in ${message.channel.name}`);
+
+    if(playerQueue.length == 0) {
+      message.channel.send(`You can only vote to start an adventure early if there is a queue. You can start a queue by using the command ${config.prefix}help`);
+    }
+    else if(playerVotes.length == 0) {
+      // First player to vote
+      playerVotes.push(message.author);
+
+      message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${maxqueuesize} players.`);
+    }
+    else if (playerVotes.includes(message.author.username)) {
+      message.channel.send(`=====\n${message.author.username} has already voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${maxqueuesize} players.`);
+    }
+    else if (playerVotes.length < maxqueuesize) {
+      // Not the first player to vote
+      playerVotes.push(message.author);
+
+      if (playerVotes.length < maxqueuesize) {
+        // Still not all players voted 
+        message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${maxqueuesize} players.`);
+      }
+      else {
+        // All players have voted, we can start the adventure early
+        checkQueue(message);
+      }
+    }
+  }
+
   // Show the queue
 	if(command === 'sq') {
 		// Delete the message with the bot command
@@ -393,6 +430,7 @@ The commands available to you are:
 - ${command}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
 - ${command}lq  - Leave the queue
 - ${command}sq  - Show the queue
+- ${command}start - Vote to start the adventure early, without the full number of players (all players in the queue must use this to start early)
 - ${command}dc  - Delete an adventure channel (only the captain can use this)
     `;
 
@@ -406,6 +444,7 @@ The commands available to you are:
 - ${command}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
 - ${command}lq  - Leave the queue
 - ${command}sq  - Show the queue
+- ${command}start - Vote to start the adventure early, without the full number of players (all players in the queue must use this to start early)
 - ${command}cq  - Clear the queue (admin-only, not to be shared with normal users)
 - ${command}ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
 - ${command}dc  - Delete an adventure channel (only the captain can use this)
