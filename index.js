@@ -389,11 +389,11 @@ client.on('message', function (message) {
   if (command === 'help') {
     let msg = `
 The commands available to you are:
-- !q   - Join the queue
-- !q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
-- !lq  - Leave the queue
-- !sq  - Show the queue
-- !dc  - Delete an adventure channel (only the captain can use this)
+- ${command}q   - Join the queue
+- ${command}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
+- ${command}lq  - Leave the queue
+- ${command}sq  - Show the queue
+- ${command}dc  - Delete an adventure channel (only the captain can use this)
     `;
 
     message.channel.send(msg);
@@ -402,13 +402,13 @@ The commands available to you are:
   if (command === 'adminhelp') {
     let msg = `
 The commands available to you are:
-- !q   - Join the queue
-- !q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
-- !lq  - Leave the queue
-- !sq  - Show the queue
-- !cq  - Clear the queue (admin-only, not to be shared with normal users)
-- !ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
-- !dc  - Delete an adventure channel (only the captain can use this)
+- ${command}q   - Join the queue
+- ${command}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
+- ${command}lq  - Leave the queue
+- ${command}sq  - Show the queue
+- ${command}cq  - Clear the queue (admin-only, not to be shared with normal users)
+- ${command}ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
+- ${command}dc  - Delete an adventure channel (only the captain can use this)
     `;
 
     message.channel.send(msg);
