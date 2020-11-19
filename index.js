@@ -111,7 +111,7 @@ function generateRandomCode() {
 }
 
 function checkQueue(message) {
-  if (playerQueue.length === config.maxqueuesize || playerQueue.length == playerVotes.length) {
+  if (playerQueue.length === config.maxqueuesize || (playerQueue.length > 0 && playerQueue.length == playerVotes.length)) {
     // Queue is full
     logger.log('info', 'Queue is full');
 
