@@ -51,7 +51,3 @@ If you want more of a sanity check here are some following commands you can run 
 To access the command line inside the docker container you can run:
 
 `docker exec -it <container id> /bin/bash`
-
-## Version 2.0 potential features
-
-* Let three people agree to start early using a voting command, so they don't have to wait for a fourth person (all three must vote to start)
