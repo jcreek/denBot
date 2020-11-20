@@ -440,12 +440,12 @@ client.on('message', function (message) {
   if (command === 'help') {
     let msg = `
 The commands available to you are:
-- ${command}q   - Join the queue
-- ${command}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
-- ${command}lq  - Leave the queue
-- ${command}sq  - Show the queue
-- ${command}start - Vote to start the adventure early, without the full number of players (all players in the queue must use this to start early)
-- ${command}dc  - Delete an adventure channel (only the captain can use this)
+- ${config.prefix}q   - Join the queue
+- ${config.prefix}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
+- ${config.prefix}lq  - Leave the queue
+- ${config.prefix}sq  - Show the queue
+- ${config.prefix}start - Vote to start the adventure early, without the full number of players (all players in the queue must use this to start early)
+- ${config.prefix}dc  - Delete an adventure channel (only the captain can use this)
     `;
 
     message.channel.send(msg);
@@ -454,14 +454,14 @@ The commands available to you are:
   if (command === 'adminhelp') {
     let msg = `
 The commands available to you are:
-- ${command}q   - Join the queue
-- ${command}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
-- ${command}lq  - Leave the queue
-- ${command}sq  - Show the queue
-- ${command}start - Vote to start the adventure early, without the full number of players (all players in the queue must use this to start early)
-- ${command}cq  - Clear the queue (admin-only, not to be shared with normal users)
-- ${command}ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
-- ${command}dc  - Delete an adventure channel (only the captain can use this)
+- ${config.prefix}q   - Join the queue
+- ${config.prefix}q <pokemon> <ign>   - Join the queue (first player can set the pokemon and their in-game name)
+- ${config.prefix}lq  - Leave the queue
+- ${config.prefix}sq  - Show the queue
+- ${config.prefix}start - Vote to start the adventure early, without the full number of players (all players in the queue must use this to start early)
+- ${config.prefix}cq  - Clear the queue (admin-only, not to be shared with normal users)
+- ${config.prefix}ru  - Remove a tagged user from the queue (admin-only, not to be shared with normal users)
+- ${config.prefix}dc  - Delete an adventure channel (only the captain can use this)
     `;
 
     message.channel.send(msg);
