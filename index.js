@@ -136,9 +136,11 @@ function checkQueue(message) {
 
     makeTempChannel(message, adventureMessage);
 
-    // Clear the queue
+    // Clear the queue and votes
     playerQueue = [];
     logger.log('info', 'Emptied queue');
+    playerVotes = [];
+    logger.log('info', 'Emptied votes');
   }
   else if (playerQueue.length === 0) {
     message.channel.send('The queue is empty :(');
@@ -328,6 +330,9 @@ client.on('message', function (message) {
     if(playerQueue.length == 0) {
       message.channel.send(`You can only vote to start an adventure early if there is a queue. You can start a queue by using the command ${config.prefix}help`);
     }
+    else if (!playerQueue.includes(message.author)) {
+      message.channel.send(`You can only vote to start an adventure early if you are in the queue. You can join the queue by using the command ${config.prefix}q`);
+    }
     else if(playerVotes.length == 0) {
       // First player to vote
       playerVotes.push(message.author);
@@ -377,10 +382,11 @@ client.on('message', function (message) {
       message.channel.send(`The queue is already empty...`);
       logger.log('info', `${message.author.username} attempted to clear the queue but it was already empty.`);
 		}
-		else {
+    else {
 			playerQueue = [];
+			playerVotes = [];
 			message.channel.send(`The queue has been cleared!`);
-			logger.log('info', `${message.author.username} cleared the queue.`);
+			logger.log('info', `${message.author.username} cleared the queue and the votes.`);
 		}
 	}
 
