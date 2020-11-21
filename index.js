@@ -177,7 +177,7 @@ function getUserFromMention(mention) {
 }
 
 function getChannelName(username) {
-  return `${username.toLowerCase()}s-adventurers`;
+  return `${username.toLowerCase().replace(' ', '-')}s-adventurers`;
 }
 
 function makeTempChannel(message, adventureMessage) {
