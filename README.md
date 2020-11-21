@@ -51,3 +51,7 @@ If you want more of a sanity check here are some following commands you can run 
 To access the command line inside the docker container you can run:
 
 `docker exec -it <container id> /bin/bash`
+
+## Future feature suggestions
+
+* If the party want to continue with the same people and the same link code they can do !again (only in the private chat) to run again and get the party for 30 more mins (denBot would also post the link code again so people can see it without scrolling) - using something like https://stackoverflow.com/questions/36563749/how-i-extend-settimeout-on-nodejs and an array of all the queues, removing those and their deletion functions each time an adventure channel is deleted
