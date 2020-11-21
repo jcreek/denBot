@@ -35,11 +35,23 @@ For a sanity check, you can run `docker images` and it should be displayed in th
 
 ## Running the Docker container
 
-Running the bot with -d runs the container in detatched mode (as in it runs in the background). If you want to see what is happening, remove that option.
+Running the bot with --detach runs the container in detatched mode (as in it runs in the background). If you want to see what is happening, remove that option.
 
-`docker run -d denbot`
+`docker run --detach --name denbot denbot`
 
 You can use CTRL+C to exit out of this command window. If you're using Windows, Docker Desktop will now show your bot under 'Containers/Apps', from where you can easily stop and start it using the GUI.
+
+## Updating
+
+If doing it manually, in the folder with all the files run:
+
+```
+docker stop denbot
+docker rm denbot
+docker image rm denbot
+docker build -t denbot .
+docker run --detach --name denbot denbot
+```
 
 ### More information
 
