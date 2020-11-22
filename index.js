@@ -207,15 +207,16 @@ function makeTempChannel(message, adventureMessage) {
 
     // Post in the channel
     createdChannel.send(adventureMessage);
+    createdChannel.send(`Please delete this channel when you're finished with it using the ${config.prefix}dc command`);
   })
     .catch(logger.error);
 
-  try {
-    // Delete the channel after the configured amount of minutes
-    setTimeout(function(){ deleteChannel(message, channelName); }, (config.channeldeletetimeinminutes * 1000 * 60) );
-  } catch (error) {
-    logger.error(`Tried to delete channel ${channelName} after timeout: `, error);
-  }
+  // try {
+  //   // Delete the channel after the configured amount of minutes
+  //   setTimeout(function(){ deleteChannel(message, channelName); }, (config.channeldeletetimeinminutes * 1000 * 60) );
+  // } catch (error) {
+  //   logger.error(`Tried to delete channel ${channelName} after timeout: `, error);
+  // }
 }
 
 function deleteChannel(message, channelName) {
