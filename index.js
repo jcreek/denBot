@@ -391,6 +391,9 @@ client.on('message', function (message) {
 			playerVotes = [];
 			message.channel.send(`The queue has been cleared!`);
 			logger.log('info', `${message.author.username} cleared the queue and the votes.`);
+			pokemonName = '';
+			captainInGameName = '';
+			logger.log('info', 'Emptied pokemon name and captain name');
 		}
 	}
 
