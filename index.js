@@ -141,6 +141,9 @@ function checkQueue(message) {
     logger.log('info', 'Emptied queue');
     playerVotes = [];
     logger.log('info', 'Emptied votes');
+    pokemonName = '';
+    captainInGameName = '';
+    logger.log('info', 'Emptied pokemon name and captain name');
   }
   else if (playerQueue.length === 0) {
     message.channel.send('The queue is empty :(');
