@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const winston = require('winston');
 const Elasticsearch = require('winston-elasticsearch');
 const config = require('./config.json');
+const {sendEmbedMessage} = require('./helpers.js');
 const client = new Discord.Client();
 
 const { format } = winston;
@@ -113,10 +114,10 @@ function generateRandomCode() {
 function checkQueue(message) {
   if (playerQueue.length === config.maxqueuesize || (playerQueue.length > 0 && playerQueue.length == playerVotes.length)) {
     // Queue is full
-    logger.log('info', 'Queue is full');
+    logger.info('Queue is full');
 
     // Post a message to say the queue is complete
-    message.channel.send(`The adventure is beginning - players should check their DMs\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+    sendEmbedMessage(logger, message, Discord, 'Queue full', `The adventure is beginning - players should check their DMs\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`)
 
     const randomCode = generateRandomCode();
     const baseMessage = `@${playerQueue[0].username} is making the lobby. Here is your link code ${randomCode}`;
@@ -131,32 +132,32 @@ function checkQueue(message) {
       });
     } catch (error) {
       logger.error('Tried to DM users: ', error);
-      message.channel.send(`There was an error, please let an admin know!\n${error}`);
+      sendEmbedMessage(logger, message, Discord, 'An error occurred', `There was an error, please let an admin know!\n${error}`, '#DB4437');
     }
 
     makeTempChannel(message, adventureMessage);
 
     // Clear the queue and votes
     playerQueue = [];
-    logger.log('info', 'Emptied queue');
+    logger.info('Emptied queue');
     playerVotes = [];
-    logger.log('info', 'Emptied votes');
+    logger.info('Emptied votes');
     pokemonName = '';
     captainInGameName = '';
-    logger.log('info', 'Emptied pokemon name and captain name');
+    logger.info('Emptied pokemon name and captain name');
   }
   else if (playerQueue.length === 0) {
-    message.channel.send('The queue is empty :(');
+    sendEmbedMessage(logger, message, Discord, 'Queue empty', 'The queue is empty :(');
     pokemonName = '';
     captainInGameName = '';
   }
   else {
     // Show queue after adding
     if (pokemonName === '' && captainInGameName === '') {
-      message.channel.send(`${generateQueueTitle()}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+      sendEmbedMessage(logger, message, Discord, generateQueueTitle(), `${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
     }
     else {
-      message.channel.send(`${generateQueueTitle()}\nPokemon: ${pokemonName}\nCaptain's IGN: ${captainInGameName}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
+      sendEmbedMessage(logger, message, Discord, generateQueueTitle(), `**Pokemon**: ${pokemonName}\n**Captain's IGN**: ${captainInGameName}\n${playerQueue.map((player, index) => `${index + 1} - ${player.username}`).join('\n')}`);
     }
   }
 }
@@ -259,8 +260,8 @@ client.on('message', function (message) {
 
     logger.info(`${message.author.username} used command q in ${message.channel.name}`);
 
-		logger.log('info', `${message.author.username} joined the queue.`);
-		message.channel.send(`=====\n${message.author.username} joined the queue.`);
+    logger.info( `${message.author.username} joined the queue.`);
+    sendEmbedMessage(logger, message, Discord, 'Queue in progress', `${message.author.username} joined the queue.`);
 
     playerQueue.push(message.author);
 
@@ -306,8 +307,8 @@ client.on('message', function (message) {
 			}
     }
 
-    logger.log('info', `${message.author.username} left the queue.`);
-		message.channel.send(`${message.author.username} left the queue.`);
+    logger.info(`${message.author.username} left the queue.`);
+    sendEmbedMessage(logger, message, Discord, 'Queue in progress', `${message.author.username} left the queue.`);
 
 		checkQueue(message);
 	}
@@ -341,10 +342,10 @@ client.on('message', function (message) {
       // First player to vote
       playerVotes.push(message.author);
 
-      message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
+      sendEmbedMessage(logger, message, Discord, 'Voting to start early', `${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
     }
     else if (playerVotes.includes(message.author.username)) {
-      message.channel.send(`=====\n${message.author.username} has already voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
+      sendEmbedMessage(logger, message, Discord, 'Voting to start early', `${message.author.username} has already voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
     }
     else if (playerVotes.length < config.maxqueuesize) {
       // Not the first player to vote
@@ -352,7 +353,7 @@ client.on('message', function (message) {
 
       if (playerVotes.length < playerQueue.length) {
         // Still not all players voted
-        message.channel.send(`=====\n${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
+        sendEmbedMessage(logger, message, Discord, 'Voting to start early', `${message.author.username} voted to start the adventure.\nAll other players in the queue must also vote to start the adventure for it to begin without ${config.maxqueuesize} players.`);
       }
       else {
         // All players have voted, we can start the adventure early
@@ -384,16 +385,16 @@ client.on('message', function (message) {
 
     if (playerQueue.length === 0) {
       message.channel.send(`The queue is already empty...`);
-      logger.log('info', `${message.author.username} attempted to clear the queue but it was already empty.`);
+      logger.info( `${message.author.username} attempted to clear the queue but it was already empty.`);
 		}
     else {
 			playerQueue = [];
 			playerVotes = [];
 			message.channel.send(`The queue has been cleared!`);
-			logger.log('info', `${message.author.username} cleared the queue and the votes.`);
+			logger.info( `${message.author.username} cleared the queue and the votes.`);
 			pokemonName = '';
 			captainInGameName = '';
-			logger.log('info', 'Emptied pokemon name and captain name');
+			logger.info('Emptied pokemon name and captain name');
 		}
 	}
 
@@ -426,13 +427,13 @@ client.on('message', function (message) {
     }
 
       message.channel.send(`${user.username} removed from queue.`);
-      logger.log('info', `${message.author.username} removed ${user.username} from queue.`);
+      logger.info( `${message.author.username} removed ${user.username} from queue.`);
 
       checkQueue(message);
     }
     else if (!(playerQueue.includes(user))) {
       message.channel.send(`${user.username} is not in the queue.`);
-      logger.log('info', `${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
+      logger.info( `${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
     }
   }
 
@@ -442,11 +443,11 @@ client.on('message', function (message) {
     // Determine if they can delete the channel (i.e. it's their temporary one) - compare the name
     if (message.channel.name === getChannelName(message.author.username)) {
       deleteChannel(message, message.channel.name)
-      logger.log('info', `${message.author.username} deleted their adventure channel.`);
+      logger.info( `${message.author.username} deleted their adventure channel.`);
     }
     else {
       message.channel.send(`${message.author.username} is not allowed to delete this channel.`);
-      logger.log('info', `${message.author.username} attempted to delete channel ${message.channel.name} but it's not their adventure channel.`);
+      logger.info( `${message.author.username} attempted to delete channel ${message.channel.name} but it's not their adventure channel.`);
     }
   }
 
