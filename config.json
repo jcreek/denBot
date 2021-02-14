@@ -4,6 +4,7 @@
   "maxqueuesize": 4,
   "channeldeletetimeinminutes": 30,
   "deletecommandstoggle": false,
+  "maxqueuesize": 4,
   "prefix": "!",
 	"token": "YOUR-TOKEN-GOES-HERE"
 }
