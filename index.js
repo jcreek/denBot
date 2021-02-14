@@ -11,16 +11,17 @@ if (process.env.NODE_ENV === 'production') {
 
 const esTransportOpts = {
   level: 'error',
+  indexPrefix: 'logs_denbot',
   clientOpts: {
-      host: config.elasticsearchhost,
+      host: config.elasticsearch.elasticsearch_address,
       log: 'error'
   },
   transformer: logData => {
       return {
-        "@timestamp": (new Date()).getTime(),
+        timestamp: new Date().toISOString(),
         severity: logData.level,
-        message: `${getCurrentDateAndTime()} - ${logData.message}`,
-        fields: {
+        message: logData.message,
+        meta: {
           app: 'denBot',
           env: env
         }
