@@ -1,7 +1,32 @@
 const Discord = require('discord.js');
 const winston = require('winston');
+const Elasticsearch = require('winston-elasticsearch');
 const config = require('./config.json');
 const client = new Discord.Client();
+
+let env = 'dev';
+if (process.env.NODE_ENV === 'production') {
+  env = 'prod';
+}
+
+const esTransportOpts = {
+  level: 'error',
+  clientOpts: {
+      host: config.elasticsearchhost,
+      log: 'error'
+  },
+  transformer: logData => {
+      return {
+        "@timestamp": (new Date()).getTime(),
+        severity: logData.level,
+        message: `${getCurrentDateAndTime()} - ${logData.message}`,
+        fields: {
+          app: 'denBot',
+          env: env
+        }
+      }
+  }
+};
 
 const logger = winston.createLogger({
   level: 'info',
@@ -11,12 +36,9 @@ const logger = winston.createLogger({
   ),
   defaultMeta: { service: 'user-service' },
   transports: [
-    //
-    // - Write all logs with level `error` and below to `error.log`
-    // - Write all logs with level `info` and below to `combined.log`
-    //
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
     new winston.transports.File({ filename: 'combined.log' }),
+    new Elasticsearch(esTransportOpts)
   ],
 });
 
@@ -35,7 +57,7 @@ let captainInGameName = '';
 
 client.login(config.token);
 client.once('ready', () =>{
-	logger.log('info', 'denBot logged in successfully!');
+  logger.log('info', 'denBot logged in successfully!');
 })
 
 /*
@@ -48,6 +70,15 @@ client.once('ready', () =>{
   * ru              - Remove a tagged user from the queue
   * dc              - Delete an adventure channel (only the captain can use this)
 */
+
+function getCurrentDateAndTime() {
+  const today = new Date();
+  const date = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+  const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+  const dateTime = `${date} ${time}`;
+
+  return dateTime;
+}
 
 function generateQueueTitle() {
   return `\n===== ADVENTURE QUEUE (${playerQueue.length}/${config.maxqueuesize}) =====`;
