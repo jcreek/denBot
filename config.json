@@ -7,5 +7,6 @@
     "elasticsearch_index_pattern" : "[logs-denbot-]YYYY.MM.DD"
   },
   "prefix": "!",
+  "token-dev": "YOUR-DEV-TOKEN-GOES-HERE",
 	"token": "YOUR-TOKEN-GOES-HERE"
 }
