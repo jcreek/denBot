@@ -260,7 +260,7 @@ client.on('message', function (message) {
 
     logger.info(`${message.author.username} used command q in ${message.channel.name}`);
 
-    logger.info( `${message.author.username} joined the queue.`);
+    logger.info(`${message.author.username} joined the queue.`);
     sendEmbedMessage(logger, message, Discord, 'Queue in progress', `${message.author.username} joined the queue.`);
 
     playerQueue.push(message.author);
