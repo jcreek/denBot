@@ -400,40 +400,44 @@ client.on('message', function (message) {
 
   // Remove a tagged user from the queue
   if (command === 'ru' && args[0]) {
-    const user = getUserFromMention(args[0]);
-
     // Delete the message with the bot command
-    if (config.deletecommandstoggle) {
-      message.delete();
-    }
+      if (config.deletecommandstoggle) {
+        message.delete();
+      }
 
-    logger.info(`${message.author.username} used command ru in ${message.channel.name}`);
+    logger.info(`${message.author.username} used command ru ${user} in ${message.channel.name}`);
 
-    if ((playerQueue.includes(user))) {
+    try {
+      const user = getUserFromMention(args[0]);
 
-      // Search for the user
-      for(var i = 0; i < playerQueue.length; i++){
-        if ((playerQueue[i].username === user.username)){
-          playerQueue.splice(i, 1);
+      if ((playerQueue.includes(user))) {
+        // Search for the user
+        for(var i = 0; i < playerQueue.length; i++){
+          if ((playerQueue[i].username === user.username)){
+            playerQueue.splice(i, 1);
+            i--;
+          }
+        }
+
+        for( var i = 0; i < playerVotes.length; i++){
+        if ( playerVotes[i].username === user.username) {
+          playerVotes.splice(i, 1);
           i--;
         }
       }
 
-      for( var i = 0; i < playerVotes.length; i++){
-			if ( playerVotes[i].username === user.username) {
-				playerVotes.splice(i, 1);
-				i--;
-			}
-    }
+        message.channel.send(`${user.username} removed from queue.`);
+        logger.info( `${message.author.username} removed ${user.username} from queue.`);
 
-      message.channel.send(`${user.username} removed from queue.`);
-      logger.info( `${message.author.username} removed ${user.username} from queue.`);
-
-      checkQueue(message);
-    }
-    else if (!(playerQueue.includes(user))) {
-      message.channel.send(`${user.username} is not in the queue.`);
-      logger.info( `${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
+        checkQueue(message);
+      }
+      else if (!(playerQueue.includes(user))) {
+        message.channel.send(`${user.username} is not in the queue.`);
+        logger.info( `${message.author.username} attempted to remove ${user.username} from queue but they weren't in it.`);
+      }
+    } catch (error) {
+      logger.error(`Tried to remove user ${args[0]} from queue but got an error: ${error}`);
+      message.channel.send(`Failed to remove ${args[0]} from the queue.`);
     }
   }
 
